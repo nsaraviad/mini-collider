@@ -16,16 +16,16 @@ class SoundBuffer():
 		return len(self.samples)
 
 	def __add__(self, other):
-		pass
+		return self._oper(other, (lambda x, y: x + y))
 
 	def __mul__(self, other):
-		pass
+		return self._oper(other, (lambda x, y: x * y))
 
 	def __sub__(self, other):
-		pass
+		return self._oper(other, (lambda x, y: x - y))
 
 	def __div__(self, other):
-		pass
+		return self._oper(other, (lambda x, y: x / y))
 
 	def __floordiv__(self, other):
 		return self.concat(other)
