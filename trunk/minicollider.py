@@ -43,11 +43,8 @@ class Sound():
 		return self.concat(other)
 
 	def __and__(self, other):
-		return self.mix(other)
-
-	def mix(self, other):
-		pass
-
+		return self._oper(other, (lambda x, y: (x + y) / 2))
+		
 	def get_samples(self):
 		return self.samples
 
@@ -134,6 +131,9 @@ class Sound():
 	def __str__(self):
 		return str(self.samples)
 
+	def tolist(self):
+		return self.samples.tolist()
+
 class SoundGenerator():
 	def __init__(self):
 		pass
@@ -173,7 +173,7 @@ class SoundGenerator():
 		pass
 
 	def noise(self, amp):
-		pass
+		return Sound(numpy.random.random(BEAT) * amp)
 
 	def note(self, note, amp, octave=1):
 		freqencies = {
