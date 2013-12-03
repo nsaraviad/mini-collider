@@ -4,13 +4,25 @@ import pylab
 import pygame
 
 NUMPY_ENCODING = numpy.int16
-AMPLITUDE_MULT = 32000
+MIXER_ENCODING = -16
 
-class SoundBuffer():
-	def __init__(self, samples, beat):
+AMPLITUDE_MULT = 32000
+SAMPLE_RATE = 8800
+BEAT = SAMPLE_RATE / 12
+
+def init(sample_rate=8800, beat=8800/12):
+	global SAMPLE_RATE, BEAT
+
+	SAMPLE_RATE = sample_rate
+	BEAT = beat
+
+	pygame.mixer.pre_init(SAMPLE_RATE, MIXER_ENCODING, 1)
+	pygame.mixer.init()
+
+class Sound():
+	def __init__(self, samples):
 		"samples tiene que ser un array de numpy"
 		self.samples = samples.copy()
-		self.beat = beat
 
 	def __len__(self):	
 		return len(self.samples)
@@ -64,20 +76,20 @@ class SoundBuffer():
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[i % len(self.samples)]
-		return SoundBuffer(new_samples, self.beat)
+		return Sound(new_samples)
 
 	def resample(self, new_len):
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[int(i * len(self) / new_len)]
-		return SoundBuffer(new_samples, self.beat)
+		return Sound(new_samples)
 
 	def copy(self):
-		return SoundBuffer(self.samples, self.beat)
+		return Sound(self.samples)
 
 	def concat(self, other):
 		new_samples = numpy.concatenate((self.samples, other.samples))
-		return SoundBuffer(new_samples, self.beat)
+		return Sound(new_samples)
 
 	def tune(self, pitch):
 		return self.resample(int(
@@ -86,11 +98,11 @@ class SoundBuffer():
 		))
 
 	def fill(self, count):
-		new_len = self.beat * count
+		new_len = BEAT * count
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[i]
-		return SoundBuffer(new_samples, self.beat)
+		return Sound(new_samples)
 
 	def reduce(self, count=1):
 		new_len = count * self.beat
@@ -110,10 +122,10 @@ class SoundBuffer():
 		new_samples = numpy.zeros(len(self))
 		for i in xrange(len(self)):
 			new_samples[i] = op(self.samples[i], other.samples[i])
-		return SoundBuffer(new_samples, self.beat)
+		return Sound(new_samples)
 
 	def expand(self, count=1):
-		new_len = count * self.beat
+		new_len = count * BEAT
 		if (len(self) < new_len):
 			return self.resample(new_len)
 		else:
@@ -123,40 +135,39 @@ class SoundBuffer():
 		return str(self.samples)
 
 class SoundGenerator():
-	def __init__(self, sample_rate, beat):
-		self.sample_rate = sample_rate
-		self.beat = beat
+	def __init__(self):
+		pass
 
 	def get_sample_rate(self):
-		return self.sample_rate
+		return SAMPLE_RATE
 
 	def get_beat(self):
-		return self.beat
+		return BEAT
 
 	def get_beats_per_second(self):
-		return self.sample_rate / self.beat
+		return SAMPLE_RATE / BEAT
 
 	def array(self, samples):
-		return SoundBuffer(numpy.array(samples), self.beat)
+		return Sound(numpy.array(samples))
 
 	def sine(self, cicles, amp):
-		omega = (cicles * numpy.pi * 2) / self.beat
-		xvalues = numpy.arange(int(self.beat)) * omega
-		return SoundBuffer(amp * numpy.sin(xvalues), self.beat)
+		omega = (cicles * numpy.pi * 2) / BEAT
+		xvalues = numpy.arange(int(BEAT)) * omega
+		return Sound(amp * numpy.sin(xvalues))
 
 	def sine_hz(self, hz, amp):
-		samples_per_second = float(self.samplerate)
+		samples_per_second = float(SAMPLE_RATE)
 	
 		seconds_per_period = 1.0 / hz
 		samples_per_period = samples_per_second * seconds_per_period
 
-		samples = numpy.array(range(self.beat), numpy.float)
+		samples = numpy.array(range(BEAT), numpy.float)
 		samples = numpy.sin((samples * 2.0 * math.pi) / samples_per_period) * amp
 
-		return SoundBuffer(numpy.array(samples), self.beat)
+		return Sound(numpy.array(samples))
 
 	def silence(self):
-		return SoundBuffer(numpy.zeros(self.beat), self.beat)
+		return Sound(numpy.zeros(BEAT))
 
 	def linear(self, start, end):
 		pass
