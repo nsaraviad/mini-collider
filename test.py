@@ -1,13 +1,11 @@
-import pygame
-from sound import *
+import minicollider
 
 sample_rate = 8000
 beat = sample_rate / 12
 
-pygame.mixer.pre_init(sample_rate, -16, 1)
-pygame.init()
+minicollider.init(sample_rate, beat)
 
-generator = SoundGenerator(sample_rate, beat)
+generator = minicollider.SoundGenerator()
 # sound = generator.sine(23, 1)
 sound = generator.note('D', 1)
 # sound.plot()
