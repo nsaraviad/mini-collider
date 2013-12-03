@@ -91,7 +91,7 @@ class Sound():
 	def tune(self, pitch):
 		return self.resample(int(
 				len(self) 
-				* ( (2**(1.0/12))**(-P) )
+				* ( (2**(1.0/12))**(-pitch) )
 		))
 
 	def fill(self, count):
