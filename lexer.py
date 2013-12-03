@@ -5,6 +5,8 @@
 # Lexer para el mini-collider
 # -----------------------------------------------------------------------------
 
+import ply.lex as lex
+
 tokens = (
     'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'WS', 'PLAY', 'POST', 'LOOP',
     'TUNE', 'FILL', 'REDU', 'EXPA', 'CON', 'MIX', 'ADD', 'SUB', 'MUL', 
@@ -14,9 +16,9 @@ tokens = (
 # Tokens
 
 t_SIN  = r'sin'
-t_LIN  = r'lin|linear'
-t_SIL  = r'sil|silence'
-t_NOI  = r'noi|noise'
+t_LIN  = r'linear|lin'
+t_SIL  = r'silence|sil'
+t_NOI  = r'noise|noi'
 t_PLAY = r'play'
 t_POST = r'post'
 t_LOOP = r'loop'
@@ -51,5 +53,4 @@ def t_error(t):
     t.lexer.skip(1)
     
 # Build the lexer
-import ply.lex as lex
-lex.lex()
+lexer = lex.lex()
