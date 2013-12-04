@@ -5,12 +5,13 @@
 # Lexer para el mini-collider
 # -----------------------------------------------------------------------------
 
-import ply.lex as lex
+#~ import ply.lex as lex
+import lex as lex
 
 tokens = (
     'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'WS', 'PLAY', 'POST', 'LOOP',
     'TUNE', 'FILL', 'REDU', 'EXPA', 'CON', 'MIX', 'ADD', 'SUB', 'MUL', 
-    'DIV', 'LPAREN', 'RPAREN', 'LLLAVE', 'RLLAVE', 'COMM',
+    'DIV', 'LPAREN', 'RPAREN', 'LLLAVE', 'RLLAVE', 'COMM','PLOT', 'COMA',
     )
 
 # Tokens
@@ -26,6 +27,7 @@ t_TUNE = r'.tune'
 t_FILL = r'.fill'
 t_REDU = r'.reduce'
 t_EXPA = r'.expand'
+t_PLOT = r'.plot'
 t_CON  = r'con|;'
 t_MIX  = r'mix|&'
 t_ADD  = r'add|\+'
@@ -36,6 +38,7 @@ t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_LLLAVE = r'\{'
 t_RLLAVE = r'\}'
+t_COMA = r','
 t_ignore_WS   = r'\s|\t|\n'
 t_ignore_COMM = r'//.*$'
 

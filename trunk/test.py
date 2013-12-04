@@ -1,20 +1,23 @@
 import minicollider
 
-sample_rate = 8000
+sample_rate = 48
 beat = sample_rate / 12
 
 minicollider.init(sample_rate, beat)
 
 generator = minicollider.SoundGenerator()
 
-sound1 = generator.array([0, 0.1, 0.2])
-sound2 = generator.array([0.2, 0.4, 0.5])
+#~ sound1 = generator.array([0, 0.1, 0.2])
+#~ sound2 = generator.array([0.2, 0.4, 0.5])
+#~ 
+#~ sound3 = sound1 // sound2
+#~ sound3.post()
+#~ 
+#~ sound4 = generator.sine(20, 1)
+#~ sound4.plot()
 
-sound3 = sound1 // sound2
-sound3.post()
-
-sound4 = generator.sine(20, 1);
-sound4.plot()
+sound5 = generator.array([0.4])
+sound5.fill(1).post()
 
 # print generator.noise(0.1).loop(24).play()
 

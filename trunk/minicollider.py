@@ -52,8 +52,8 @@ class Sound():
 		self.samples = samples
 		return self
 
-	def play(self):
-		samples = numpy.array(self.samples * AMPLITUDE_MULT, NUMPY_ENCODING)
+	def play(self, times):
+		samples = numpy.array(self.copy().loop(times).get_samples() * AMPLITUDE_MULT, NUMPY_ENCODING)
 		channel = pygame.sndarray.make_sound(samples).play()
 		while channel.get_busy(): pass
 		return self
@@ -65,9 +65,10 @@ class Sound():
 
 	def post(self):
 		print self
+		return self
 
 	def loop(self, count):
-		return self.resize(count * len(self.samples))
+		return self.resize(int(count) * len(self.samples))
 
 	def resize(self, new_len):
 		new_samples = numpy.zeros(new_len)
@@ -97,12 +98,12 @@ class Sound():
 	def fill(self, count):
 		new_len = BEAT * count
 		new_samples = numpy.zeros(new_len)
-		for i in xrange(new_len):
+		for i in xrange(len(self.samples)):
 			new_samples[i] = self.samples[i]
 		return Sound(new_samples)
 
 	def reduce(self, count=1):
-		new_len = count * self.beat
+		new_len = int(count) * BEAT
 		if (len(self) > new_len):
 			return self.resample(new_len)
 		else:
@@ -122,7 +123,7 @@ class Sound():
 		return Sound(new_samples)
 
 	def expand(self, count=1):
-		new_len = count * BEAT
+		new_len = int(count) * BEAT
 		if (len(self) < new_len):
 			return self.resample(new_len)
 		else:
@@ -151,11 +152,12 @@ class SoundGenerator():
 		return Sound(numpy.array(samples))
 
 	def sine(self, cicles, amp):
-		omega = (cicles * numpy.pi * 2) / BEAT
+		omega = (int(cicles) * numpy.pi * 2) / BEAT
 		xvalues = numpy.arange(int(BEAT)) * omega
 		return Sound(amp * numpy.sin(xvalues))
 
 	def sine_hz(self, hz, amp):
+		#~ hz = hz / (SAMPLE_RATE / BEAT)
 		samples_per_second = float(SAMPLE_RATE)
 	
 		seconds_per_period = 1.0 / hz
@@ -170,7 +172,7 @@ class SoundGenerator():
 		return Sound(numpy.zeros(BEAT))
 
 	def linear(self, start, end):
-		pass
+		return Sound(numpy.linspace(start, end, BEAT))
 
 	def noise(self, amp):
 		return Sound(numpy.random.random(BEAT) * amp)
