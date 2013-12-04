@@ -5,8 +5,8 @@
 # Lexer para el mini-collider
 # -----------------------------------------------------------------------------
 
-#~ import ply.lex as lex
-import lex as lex
+import ply.lex as lex
+#~ import lex as lex
 
 tokens = (
     'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'WS', 'PLAY', 'POST', 'LOOP',
