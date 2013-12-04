@@ -5,8 +5,8 @@
 # Parser para el mini-collider
 # -----------------------------------------------------------------------------
 
-#~ import ply.yacc as yacc
-import yacc as yacc
+import ply.yacc as yacc
+#~ import yacc as yacc
 import minicollider
 from lexer import tokens
 
@@ -111,5 +111,7 @@ while 1:
     try:
         s = input('buff > ')   # Use raw_input on Python 2
     except EOFError:
+        break
+    if s == 'quit':
         break
     yacc.parse(s)

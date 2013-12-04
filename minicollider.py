@@ -115,11 +115,11 @@ class Sound():
 			b = other
 		else:
 			a = self
-			b = other.resize(len(other))
+			b = other.resize(len(a))
 
-		new_samples = numpy.zeros(len(self))
-		for i in xrange(len(self)):
-			new_samples[i] = op(self.samples[i], other.samples[i])
+		new_samples = numpy.zeros(len(a))
+		for i in xrange(len(a)):
+			new_samples[i] = op(a.samples[i], b.samples[i])
 		return Sound(new_samples)
 
 	def expand(self, count=1):
