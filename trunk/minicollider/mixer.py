@@ -3,6 +3,7 @@ import numpy
 import pylab
 import pygame
 
+
 NUMPY_ENCODING = numpy.int16
 MIXER_ENCODING = -16
 
@@ -23,7 +24,15 @@ def init(sample_rate=8800, beat=8800/12, init_pygame=1):
 class Sound():
 	def __init__(self, samples):
 		"samples tiene que ser un array de numpy"
+		if (len(samples)) == 0:
+			raise Exception('Se intenta crear buffer vacio')
 		self.samples = samples.copy()
+
+	def __eq__(self, other):
+		return numpy.array_equal(self.samples, other.samples)
+
+	def __iter__(self):
+		return self.samples.__iter__()
 
 	def __len__(self):	
 		return len(self.samples)
@@ -111,12 +120,13 @@ class Sound():
 			return self.copy()
 
 	def _oper(self, other, op):
+
 		if (len(self) < len(other)):
 			a = self.resize(len(other))
 			b = other
 		else:
 			a = self
-			b = other.resize(len(a))
+			b = other.resize(len(self))
 
 		new_samples = numpy.zeros(len(a))
 		for i in xrange(len(a)):
@@ -156,18 +166,6 @@ class SoundGenerator():
 		omega = (int(cicles) * numpy.pi * 2) / BEAT
 		xvalues = numpy.arange(int(BEAT)) * omega
 		return Sound(amp * numpy.sin(xvalues))
-
-	def sine_hz(self, hz, amp):
-		#~ hz = hz / (SAMPLE_RATE / BEAT)
-		samples_per_second = float(SAMPLE_RATE)
-	
-		seconds_per_period = 1.0 / hz
-		samples_per_period = samples_per_second * seconds_per_period
-
-		samples = numpy.array(range(BEAT), numpy.float)
-		samples = numpy.sin((samples * 2.0 * math.pi) / samples_per_period) * amp
-
-		return Sound(numpy.array(samples))
 
 	def silence(self):
 		return Sound(numpy.zeros(BEAT))
