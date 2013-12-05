@@ -1,4 +1,3 @@
-
 # -----------------------------------------------------------------------------
 # parser.py
 #
@@ -7,16 +6,15 @@
 
 import ply.yacc as yacc
 from lexer import tokens
-import minicollider
+import mixer
 
 sample_rate = 1200
 beat = sample_rate / 12
 
-minicollider.init(sample_rate, beat)
-generator = minicollider.SoundGenerator()
+mixer.init(sample_rate, beat)
+generator = mixer.SoundGenerator()
 
 # Parsing rules
-
 precedence = (
 		('left','CON','MIX'),
 		('left','ADD','SUB'),
@@ -105,12 +103,3 @@ def p_error(t):
 		print("Syntax error at '%s'" % t.value)
 
 parser = yacc.yacc()
-
-while 1:
-		try:
-				s = input('buff > ')   # Use raw_input on Python 2
-		except EOFError:
-				break
-		if s == 'quit':
-				break
-		yacc.parse(s)
