@@ -17,7 +17,7 @@ def init(sample_rate=8800, beat=8800/12):
 	BEAT = beat
 
 	pygame.mixer.pre_init(SAMPLE_RATE, MIXER_ENCODING, 1)
-	pygame.mixer.init()
+	pygame.init()
 
 class Sound():
 	def __init__(self, samples):
