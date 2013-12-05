@@ -9,10 +9,10 @@ import ply.lex as lex
 #~ import lex as lex
 
 tokens = (
-    'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'WS', 'PLAY', 'POST', 'LOOP',
-    'TUNE', 'FILL', 'REDU', 'EXPA', 'CON', 'MIX', 'ADD', 'SUB', 'MUL', 
-    'DIV', 'LPAREN', 'RPAREN', 'LLLAVE', 'RLLAVE', 'COMM','PLOT', 'COMA',
-    )
+	'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'WS', 'PLAY', 'POST', 'LOOP',
+	'TUNE', 'FILL', 'REDU', 'EXPA', 'CON', 'MIX', 'ADD', 'SUB', 'MUL', 
+	'DIV', 'LPAREN', 'RPAREN', 'LLLAVE', 'RLLAVE', 'COMM','PLOT', 'COMA',
+	)
 
 # Tokens
 
@@ -43,17 +43,17 @@ t_ignore_WS   = r'\s|\t|\n'
 t_ignore_COMM = r'//.*$'
 
 def t_NUM(t):
-    r'[0-9]+(\.[0-9]+)?'
-    try:
-        t.value = float(t.value)
-    except ValueError:
-        print("Number value too large %d", t.value)
-        t.value = 0
-    return t
-    
+	r'[0-9]+(\.[0-9]+)?'
+	try:
+		t.value = float(t.value)
+	except ValueError:
+		print("Number value too large %d", t.value)
+		t.value = 0
+	return t
+	
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
-    
+	print("Illegal character '%s'" % t.value[0])
+	t.lexer.skip(1)
+	
 # Build the lexer
 lexer = lex.lex()
