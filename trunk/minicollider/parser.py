@@ -10,10 +10,10 @@ import mixer
 generator = None
 parser = None
 
-def init(sample_rate, beat):
+def init(sample_rate, beat, init_pygame=0):
 	global generator
 
-	mixer.init(sample_rate, beat)
+	mixer.init(sample_rate, beat, init_pygame)
 	generator = mixer.SoundGenerator()	
 
 def parse(input):
@@ -108,7 +108,7 @@ def p_BUFFER_llaves(t):
 def p_expression_number(t):
 		'BUFFER : NUM'
 
-		t[0] = generator.array([t[1]])
+		t[0] = generator.from_list([t[1]])
 
 def p_error(t):
 		print("Syntax error at '%s'" % t.value)

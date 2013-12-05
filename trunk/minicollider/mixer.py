@@ -10,14 +10,15 @@ AMPLITUDE_MULT = 32000
 SAMPLE_RATE = 8800
 BEAT = SAMPLE_RATE / 12
 
-def init(sample_rate=8800, beat=8800/12):
+def init(sample_rate=8800, beat=8800/12, init_pygame=1):
 	global SAMPLE_RATE, BEAT
 
 	SAMPLE_RATE = sample_rate
 	BEAT = beat
 
-	pygame.mixer.pre_init(SAMPLE_RATE, MIXER_ENCODING, 1)
-	pygame.init()
+	if init_pygame:
+		pygame.mixer.pre_init(SAMPLE_RATE, MIXER_ENCODING, 1)
+		pygame.init()
 
 class Sound():
 	def __init__(self, samples):
@@ -148,7 +149,7 @@ class SoundGenerator():
 	def get_beats_per_second(self):
 		return SAMPLE_RATE / BEAT
 
-	def array(self, samples):
+	def from_list(self, samples):
 		return Sound(numpy.array(samples))
 
 	def sine(self, cicles, amp):
