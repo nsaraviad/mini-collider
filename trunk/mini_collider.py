@@ -1,10 +1,9 @@
-import minicollider.parser as parser
+import minicollider.parser
 
-while 1:
-	try:
-			s = input('buff > ')   # Use raw_input on Python 2
-	except EOFError:
-			break
-	if s == 'quit':
-			break
-	parser.parse(s)
+minicollider.parser.init(8000, 8000 / 12)
+
+s = '''
+sin(21).loop(12).post
+'''
+
+minicollider.parser.parse(s)
