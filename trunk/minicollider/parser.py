@@ -8,11 +8,10 @@ from lexer import tokens
 import mixer
 
 generator = None
-parser = None
 
-def init(sample_rate, beat, init_pygame=0):
+def init(sample_rate, beat, init_pygame=1):
 	global generator
-
+	
 	mixer.init(sample_rate, beat, init_pygame)
 	generator = mixer.SoundGenerator()	
 
