@@ -6,9 +6,9 @@
 import ply.lex as lex
 
 tokens = (
-	'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'WS', 'PLAY', 'POST', 'LOOP',
+	'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'PLAY', 'POST', 'LOOP',
 	'TUNE', 'FILL', 'REDU', 'EXPA', 'CON', 'MIX', 'ADD', 'SUB', 'MUL', 
-	'DIV', 'LPAREN', 'RPAREN', 'LLLAVE', 'RLLAVE', 'COMM','PLOT', 'COMA',
+	'DIV', 'LPAREN', 'RPAREN', 'LLLAVE', 'RLLAVE','PLOT', 'COMA',
 )
 
 # Tokens
