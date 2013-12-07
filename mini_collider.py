@@ -39,7 +39,8 @@ def prompt():
         except EOFError:
             print
             break
-        minicollider.parser.parse(entrada)
+        if entrada != '':
+            minicollider.parser.parse(entrada)
 
 
 if __name__ == '__main__':
