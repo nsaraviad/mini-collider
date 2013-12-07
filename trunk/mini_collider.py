@@ -1,9 +1,51 @@
 import minicollider.parser
+try:
+    import argparse
+except ImportError:
+    from minicollider.external import argparse
 
-minicollider.parser.init(8000, 8000 / 12)
 
-s = '''
-sin(3).plot
-'''
+def parsear_argumentos():
+    argparser = argparse.ArgumentParser(formatter_class=
+                                        argparse.ArgumentDefaultsHelpFormatter)
+    argparser.add_argument('-s', '--samplerate',
+                           help="The desired sample rate.",
+                           default=8000,
+                           type=int)
+    argparser.add_argument('-b', '--beat',
+                           help="The desired beat.",
+                           default=8000 / 12,
+                           type=int)
+    argparser.add_argument('-f', '--file',
+                           help="A file with a buffer to parse (optional).")
+    return argparser.parse_args()
 
-minicollider.parser.parse(s)
+
+def parsear_archivo(file):
+    try:
+        archivo = open(args.file, 'r')
+        entrada = archivo.read()
+        archivo.close()
+    except IOError:
+        print 'Error opening the file.'
+        exit(1)
+    minicollider.parser.parse(entrada)
+
+
+def prompt():
+    while 1:
+        try:
+            entrada = input('buffer > ')
+        except EOFError:
+            print
+            break
+        minicollider.parser.parse(entrada)
+
+
+if __name__ == '__main__':
+    args = parsear_argumentos()
+    minicollider.parser.init(args.samplerate, args.beat)
+    if args.file is not None:
+        parsear_archivo(args.file)
+    else:
+        prompt()
