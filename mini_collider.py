@@ -35,7 +35,7 @@ def parsear_archivo(file):
 def prompt():
     while 1:
         try:
-            entrada = input('buffer > ')
+            entrada = raw_input('buffer > ')
         except EOFError:
             print
             break
