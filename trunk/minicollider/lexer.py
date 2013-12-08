@@ -37,8 +37,8 @@ t_RPAREN      = r'\)'
 t_LLLAVE      = r'\{'
 t_RLLAVE      = r'\}'
 t_COMA        = r','
+t_ignore_COMM = r'//.*\n'
 t_ignore_WS   = r'\s|\t|\n'
-t_ignore_COMM = r'//.*$'
 
 def t_NUM(t):
 	r'\d+(\.\d+)?'

@@ -11,6 +11,7 @@ AMPLITUDE_MULT = 32000
 SAMPLE_RATE = 8800
 BEAT = SAMPLE_RATE / 12
 
+
 def init(sample_rate=8800, beat=8800/12, init_pygame=1):
 	global SAMPLE_RATE, BEAT
 	
@@ -84,13 +85,13 @@ class Sound():
 		return self
 
 	def loop(self, count):
-		if not(isinstance(count, int) and 0 < count):
-			raise Exception("[LOOP] Se esperaba un entero positivo: %s" % count)
-		return self.resize(count * len(self.samples))
+		if not (isinstance(count, (int, float)) and 0 < count):
+			raise Exception("[LOOP] Se esperaba un entero o flotante positivo: %s" % count)
+		return self.resize(int(count * len(self.samples)))
 
 	def resize(self, new_len):
 		if not(isinstance(new_len, int) and 0 < new_len):
-			raise Exception("[RESIZE] Se esperaba un entero positivo: %s" % count)
+			raise Exception("[RESIZE] Se esperaba un entero positivo: %s" % new_len)
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[i % len(self.samples)]
@@ -98,7 +99,7 @@ class Sound():
 
 	def resample(self, new_len):
 		if not(isinstance(new_len, int) and 0 < new_len):
-			raise Exception("[RESAMPLE] Se esperaba un entero positivo: %s" % count)
+			raise Exception("[RESAMPLE] Se esperaba un entero positivo: %s" % new_len)
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[int(i * len(self) / new_len)]
@@ -118,9 +119,9 @@ class Sound():
 		))
 
 	def fill(self, count):
-		if not(isinstance(count, int) and 0 < count):
-			raise Exception("[FILL] Se esperaba un entero positivo: %s" % count)
-		new_len = BEAT * count
+		if not (isinstance(count, (int, float)) and 0 < count):
+			raise Exception("[FILL] Se esperaba un entero o flotante positivo: %s" % count)
+		new_len = int(BEAT * count)
 		
 		if (len(self) >= new_len): return self.copy()
 
