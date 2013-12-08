@@ -180,8 +180,10 @@ class SoundGenerator():
 		return Sound(numpy.array(samples))
 
 	def sine(self, cicles, amp):
-		if not(-1<= amp <=1):
+		if not(0<= amp <=1):
 			raise Exception("[SINE] Amplitud incorrecta: %s" % amp)
+		if not(0 < cicles and isinstance(cicles, int)):
+			raise Exception("[SINE] Valor de ciclos incorrecto: %s" % cicles)
 		omega = (cicles * numpy.pi * 2) / BEAT
 		xvalues = numpy.arange(BEAT) * omega
 		return Sound(amp * numpy.sin(xvalues))
@@ -195,7 +197,7 @@ class SoundGenerator():
 		return Sound(numpy.linspace(start, end, BEAT))
 
 	def noise(self, amp):
-		if not(-1<= amp <=1):
+		if not(0<= amp <=1):
 			raise Exception("[NOISE] Amplitud incorrecta: %s" % amp)
 		return Sound(numpy.random.random(BEAT) * amp)
 
