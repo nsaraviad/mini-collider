@@ -55,19 +55,23 @@ class TestSoundGeneratorCases(MixerTestCase):
 		self.assertEqual([-1] * self.beat, sound.tolist())
 
 		sound = self.generator.linear(0, -1);
-		self.assertTrue(numpy.array_equal(numpy.linspace(0, -1, self.beat), sound.get_samples()))		
+		self.assertTrue(numpy.array_equal(numpy.linspace(0, -1, self.beat),
+											sound.get_samples()))		
 		self.assertEqual(self.beat, len(sound))
 
 		sound = self.generator.linear(1, -1);
-		self.assertTrue(numpy.array_equal(numpy.linspace(1, -1, self.beat), sound.get_samples()))		
+		self.assertTrue(numpy.array_equal(numpy.linspace(1, -1, self.beat),
+											sound.get_samples()))		
 		self.assertEqual(self.beat, len(sound))
 
 		sound = self.generator.linear(0, 1);
-		self.assertTrue(numpy.array_equal(numpy.linspace(0, 1, self.beat), sound.get_samples()))		
+		self.assertTrue(numpy.array_equal(numpy.linspace(0, 1, self.beat),
+											sound.get_samples()))		
 		self.assertEqual(self.beat, len(sound))
 
 		sound = self.generator.linear(-1, 1);
-		self.assertTrue(numpy.array_equal(numpy.linspace(-1, 1, self.beat), sound.get_samples()))
+		self.assertTrue(numpy.array_equal(numpy.linspace(-1, 1, self.beat),
+											sound.get_samples()))
 		self.assertEqual(self.beat, len(sound))
 
 		self.assertRaises(Exception, lambda : self.generator.linear(2, 0))

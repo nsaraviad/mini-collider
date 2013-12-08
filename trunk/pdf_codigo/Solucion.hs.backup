@@ -1,0 +1,214 @@
+--   _________   _____    _________ --
+--  /   _____/  /  _  \  /   _____/ --
+--  \_____  \  /  /_\  \ \_____  \  --
+--  /        \/    |    \/        \ --
+-- /_______  /\____|__  /_______  / --
+--         \/         \/        \/  --
+
+module Solucion where
+
+import List
+import Tipos
+
+data Melodia = Silencio Duracion
+		 		 | Nota Tono Duracion
+				 | Secuencia Melodia Melodia
+                 | Paralelo [Melodia]
+  deriving Show
+
+-- Funciones auxiliares
+
+foldNat::a->(a->a)->Integer->a
+foldNat caso0 casoSuc n | n == 0 = caso0
+						| n > 0 = casoSuc (foldNat 
+caso0 casoSuc (n-1))
+						| otherwise = error "El 
+argumento de foldNat no puede ser negativo."
+
+maxLista::(Ord a)=>[a]->a
+maxLista = foldr1 max
+
+fix::(a->a)->a
+fix f = f (fix f)
+
+-- Funciones pedidas
+
+-- Ej1 a: se devuelve un paralelo que los primeros d duracion toca m1 compuesto 
+con silencio y luego toca m2
+superponer::Melodia->Duracion->Melodia->Melodia
+superponer m1 d m2 = Paralelo[m1, Secuencia (Silencio d) m2]
+
+-- b
+-- Sugerencia: usar foldNat
+-- usamos foldNat pasandole la melodia como caso base y como caso recursivo, 
+usamos una funcion que recibe la melodia anterior
+-- y agrega en paralelo el silencio. Usamos i-1 porque queremos i veces la 
+melodia original
+canon::Duracion->Integer->Melodia->Melodia
+canon d i m = foldNat m (\x -> Paralelo [m, Secuencia (Silencio d) x ] ) (i-1)
+
+-- c usamos foldr. Pasamos como funcion a Secuencia y como parametros, el caso 
+base es el ultimo elemento
+-- y la lista que pasamos es la lista original sin el ultimo elemento.
+secuenciaLista :: [Melodia] -> Melodia--Se asume que la lista no es vacia.
+secuenciaLista xs = foldr Secuencia (last xs) (init xs)
+
+-- Ej2 a
+-- usamos foldr con una lista infinita. La funcion que pasamos como parametro 
+usa la melodia y el caso recursivo.
+canonInfinito::Duracion->Melodia->Melodia
+canonInfinito d m = foldr (\x y-> Paralelo [m, Secuencia (Silencio d) y ] ) m 
+[0..]
+
+-- b usamos foldr con una lista infinita. La funcion que pasamos es el 
+constructor de secuencia con la melodia que 
+-- viene como parametro y el caso recursivo, ignorando el numero que toma en la 
+lista.
+repeticionInfinita :: Melodia -> Melodia
+repeticionInfinita m = foldr (\x y-> Secuencia m y) m [0..]
+-- otra opcion usando fix: repeticionInfinita m = fix (Secuencia m)
+
+--Ej3
+-- foldMelodia::constr1->constr2->constr3->constr4->melodia->devolver
+-- 
+foldMelodia::(Duracion->b)->(Tono->Duracion->b)->(b->b->b)->([b]->b)->Melodia->b
+foldMelodia::(Duracion->b)->(Tono->Duracion->b)->(b->b->b)->([b]->b)->Melodia->b
+foldMelodia fSil fNota fSec fPar (Silencio d) = fSil d
+foldMelodia fSil fNota fSec fPar (Nota t d) = fNota t d
+foldMelodia fSil fNota fSec fPar (Secuencia m1 m2) = fSec (foldMelodia fSil 
+fNota fSec fPar m1) (foldMelodia fSil fNota fSec fPar m2)
+foldMelodia fSil fNota fSec fPar (Paralelo xs) = fPar (map (foldMelodia fSil 
+fNota fSec fPar) xs)
+-- Ej: Cantidad de constructores:
+-- foldMelodia (\x->1) (\x y->1)  (\x y->x+y+1) (\xs->1 + sum xs) (Silencio 3) 
+-- 1 constructor
+-- foldMelodia (\x->1) (\x y->1)  (\x y->x+y+1) (\xs->1 + sum xs) (Paralelo 
+[(Silencio 3)]) -- 2 constructores
+-- foldMelodia (\x->1) (\x y->1)  (\x y->x+y+1) (\xs->1 + sum xs) (Secuencia 
+(Silencio 3) (Nota 1 2)) -- 3 constructores
+-- foldMelodia (\x->1) (\x y->1)  (\x y->x+y+1) (\xs->1 + sum xs) (Paralelo 
+[Nota 60 4,Secuencia (Silencio 2) (Paralelo [Nota 60 4,Secuencia (Silencio 2) 
+(Nota 60 4)])]) -- 9 constructores
+
+-- Ej 4 a: Reconstruye todas las melodias de la misma forma salvo las de Nota 
+que les aplica la funcion f al tono.						
+      
+mapMelodia::(Tono->Tono)->Melodia->Melodia
+mapMelodia f = foldMelodia Silencio (\t d->Nota (f t) d) Secuencia Paralelo
+-- mapMelodia f = foldMelodia (\d->Silencio d) (\t d->Nota (f t) d) (\m1 
+m2->Secuencia m1 m2) (\xs->Paralelo xs)
+-- Le resta 59 a todas las notas: mapMelodia (\x->x-59) (Paralelo [Nota 60 
+4,Secuencia (Silencio 2) (Paralelo [Nota 60 4,Secuencia (Silencio 2) (Nota 60 
+4)])])
+
+-- Ej 4 b: Usamos mapMelodia para incrementar todos los tonos en el valor 
+deseado
+transportar :: Integer -> Melodia -> Melodia
+transportar n = mapMelodia (\x->x+n)
+-- Suma 40 a las notas: transportar 40 (Paralelo [Nota 60 4,Secuencia (Silencio 
+2) (Paralelo [Nota 1 4,Secuencia (Silencio 2) (Nota 60 4)])])
+
+-- Ej 4 c: del silencio devuelve la duracion, de la nota la duracion, de la 
+secuencia la suma de la duracion de las dos melodias y de las melodias en 
+paralelos la maxima
+duracionTotal::Melodia->Duracion
+duracionTotal = foldMelodia id (\t d->d) (\x y->x+y) (maxLista)
+-- duracionTotal (Silencio 1)
+-- duracionTotal (Nota 68 1)
+-- duracionTotal (Secuencia (Silencio 1) (Nota 68 1))
+-- duracionTotal (Paralelo [(Silencio 1),(Silencio 2),(Nota 68 3)])
+-- duracionTotal (Paralelo [(Secuencia (Silencio 4) (Nota 68 5)),(Silencio 
+1),(Nota 4 8)]) : 9 :)
+
+-- Ej 4 d: Pasamos el tono a integral, lo multiplicamos por el float y lo 
+truncamos para que sea integer devuelta
+cambiarVelocidad::Float->Melodia->Melodia--Sugerencia: usar round y fromIntegral
+cambiarVelocidad n = mapMelodia (\x->truncate ((fromIntegral x)*n))
+-- cambiarVelocidad 0.2 (Secuencia (Silencio 1) (Nota 68 1))
+-- cambiarVelocidad 2 (Secuencia (Silencio 1) (Nota 68 1))
+
+-- Ej 4 e: Damos vuelta el orden en las secuencias y recursivamente en los 
+paralelos
+-- En los paralelos consideramos que si hay dos melodias de distinta duracion, 
+las invertimos independientemente
+-- (es decir que a la mas corta no se le adicionan silencios al comienzo)
+invertir :: Melodia -> Melodia
+invertir = foldMelodia Silencio Nota (\x y->Secuencia y x) Paralelo
+-- invertir (Secuencia (Silencio 1) (Paralelo [Silencio 2,Nota 3 3]))
+-- invertir = foldMelodia (\d->Silencio d) (\t d->Nota t d) (\x y->Secuencia y 
+x) (\xs->Paralelo xs) 
+-- Preguntar si hay que agregar silencios a las melodias mas cortas con 
+superponer cuando se corren cosas en paralelo
+
+-- Ej 5 						       
+-- En instantes menores que 0 no suena ninguna nota. Se puede usar recursion 
+explicita. Resaltar las partes del codigo que hacen que no se ajuste al 
+esquema fold.
+-- Sugerencia: usar concatMap.
+-- Arrancan del instante 0. Consideramos que la notas que van en forma 
+secuencial comienzan su intervalo de forma cerrada y lo terminan de forma 
+cerrada. Como ejemplo [1,4) para una nota de 3 beats.
+notasQueSuenan::Instante->Melodia->[Tono]
+notasQueSuenan n m = nub(notasQueSuenan2 n m)
+--nub saca los repetidos de la lista 
+
+notasQueSuenan2::Instante->Melodia->[Tono]
+notasQueSuenan2 n (Silencio d) = []
+notasQueSuenan2 n (Nota t d) = if n < 0 then []
+									   else 
+if (n-d) < 0 then [t] else []
+notasQueSuenan2 n (Secuencia m1 m2) = if n < 0 then []
+									   	
+	   else(notasQueSuenan2 n m1) ++ (notasQueSuenan2 (n - duracionTotal 
+m1) m2)
+notasQueSuenan2 n (Paralelo xs) = if n < 0 then []
+									   	
+   else concatMap (notasQueSuenan2 n) xs
+--Ejemplos
+-- notasQueSuenan 0 (Paralelo [(Nota 60 3),(Nota 61 3),(Nota 62 3),(Secuencia 
+(Nota 63 5) (Nota 64 6))]) = [60,61,62,63]
+-- notasQueSuenan 10 (Secuencia (Nota 60 5) (Secuencia (Nota 61 5) (Secuencia 
+(Nota 62 5) (Nota 63 6)))) = [62]
+-- NO ES FOLD porque en el constructor de secuencia, no se alternan las 2 
+partes de la misma manera. Es decir, no se aplica la misma funcion. 
+
+-- Ej 6 a 
+cambios :: Instante->[Tono]->[Tono]->[Evento]--Sugerencia: usar listas por 
+comprension. No repetir eventos.
+cambios i xs ys = nub([Off i t | t <- xs, notElem t ys] ++ [On i t | t <- ys, 
+notElem t xs])
+--Ejemplo de la catedra: cambios 1 [1,2,3,4,5] [1,2,7,5,7,4,9] = [Off 1 3,On 1 
+7,On 1 9]
+
+-- Ej 6 b
+eventosPorNotas::(Instante->[Tono])->Duracion->[Evento]
+eventosPorNotas f d =   [On 0 t | t <- (f 0)]   -- Caso base, cuando se hace On 
+de todo lo que suena en el primer instante
+                        ++ concat ([(\i ys zs->cambios i ys zs) x (f (x-1)) (f 
+x)  | x <- [1..d]] )  -- Casos de cambios intermedios, posible nub
+                        ++ [Off (d+1) t | t <- (f d)] -- Caso fin, cuando se 
+hace Off todo lo que seguia sonando
+-- En los cambios intermedios hacemos una lista por comprension que para cada 
+valor desde uno a la duracion, aplica la funcion "cambios" 
+-- entre la lista de tonos de este instante y la del anterior y luego hace 
+concat.
+-- No usamos foldl porque nos parecio mas clara esta forma.
+
+-- eventosPorNotas fEjemplo 3 ~> [On 0 60,On 1 64,Off 2 60,Off 2 64,On 3 67,Off 
+4 67]
+
+fEjemplo::Instante->[Tono]
+fEjemplo 0 = [60]
+fEjemplo 1 = [60,64]
+fEjemplo 2 = []
+fEjemplo 3 = [67]
+
+--Sugerencia: usar una funcion auxiliar 
+eventosPorNotas::(Instante->[Tono])->Duracion->[Evento], basada en foldl sobre 
+la lista de 0 a la duracion.
+eventos :: Melodia -> Duracion -> [Evento]
+eventos m d =  nub (eventosPorNotas (\i->notasQueSuenan i m) d)
+
+-- eventos (Paralelo [Nota 60 10,Secuencia (Silencio 3) (Nota 64 7),Secuencia 
+(Silencio 6) (Nota 67 4)]) 6 
+--          ~> [On 0 60,On 3 64,On 6 67,Off 7 60,Off 7 64,Off 7 67]

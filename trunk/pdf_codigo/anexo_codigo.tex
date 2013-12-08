@@ -1,0 +1,110 @@
+\documentclass[10pt, a4paper,english,spanish]{article}
+\usepackage{subfig}
+\parindent=0 pt
+\parskip=11 pt
+\usepackage[width=15.5cm, left=3cm, top=2.5cm, height= 24.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{caratula}
+
+\usepackage{sectsty}
+\sectionfont{\large}
+
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\lhead{Mini-collider}
+\rhead{Grupo 11}
+
+\begin{document}
+
+\materia{Teoría de lenguajes}
+\titulo{Anexo código mini-collider}
+\grupo{Grupo: 11}
+
+\integrante{Calderini, Nicolás}{820/10}{calderini.nicolas@gmail.com}
+\integrante{Hernández, Santiago}{48/11}{santi-hernandez@hotmail.com}
+\integrante{Marasca, Dardo}{227/07}{dmarasca@yahoo.com.ar}
+\integrante{Saravia, Nicolás}{905/04}{nicolasaravia@yahoo.com}
+ 
+\maketitle
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+\parskip 2pt
+\parindent 20pt
+
+\setcounter{page}{1}
+\tableofcontents
+
+
+
+\noindent \newline \newline El código entregado se encuentra dividido en módulos con la siguiente estructura:
+\begin{verbatim}
++--- mini_collider.py
++--- minicollider
+|    \--- lexer.py
+|    \--- mixer.py
+|    \--- parser.py
+|    \--- test
+|         \--- test_mixer.py
+|         \--- test_parser.py
+\end{verbatim}
+
+\newpage
+
+\newpage
+\section{mini\_collider.py}
+\inputminted[linenos, tabsize=4]{python}{../mini_collider.py}
+
+\newpage
+\section{lexer.py}
+\inputminted[linenos, tabsize=4]{python}{../minicollider/lexer.py}
+
+\newpage
+\section{mixer.py}
+\inputminted[linenos, tabsize=4]{python}{../minicollider/mixer.py}
+
+\newpage
+\section{parser.py}
+\inputminted[linenos, tabsize=4]{python}{../minicollider/parser.py}
+
+\newpage
+\section{test\_mixer.py}
+\inputminted[linenos, tabsize=4]{python}{../minicollider/test/test_mixer.py}
+
+\newpage
+\section{test\_parser.py}
+\inputminted[linenos, tabsize=4]{python}{../minicollider/test/test_parser.py}
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
