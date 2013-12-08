@@ -4,6 +4,7 @@
 # Lexer para el mini-collider
 # -----------------------------------------------------------------------------
 import ply.lex as lex
+import re
 
 tokens = (
 	'NUM', 'SIN', 'LIN', 'SIL', 'NOI', 'PLAY', 'POST', 'LOOP',
@@ -40,17 +41,16 @@ t_ignore_WS   = r'\s|\t|\n'
 t_ignore_COMM = r'//.*$'
 
 def t_NUM(t):
-	r'[0-9]+(\.[0-9]+)?'
-	try:
+	r'\d+(\.\d+)?'
+	if t.value.find('.') == -1: 
+		t.value = int(t.value)
+	else:
 		t.value = float(t.value)
-	except ValueError:
-		print("Number value too large %d", t.value)
-		t.value = 0
-	return t
+		
+	return t	
 	
 def t_error(t):
-	print("Illegal character '%s'" % t.value[0])
-	t.lexer.skip(1)
+	raise SyntaxError("Illegal character '%s'" % t.value[0])
 	
 # Build the lexer
 lexer = lex.lex()

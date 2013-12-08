@@ -26,8 +26,13 @@ class Sound():
 	def __init__(self, samples):
 		"samples tiene que ser un array de numpy"
 		if (len(samples)) == 0:
-			raise Exception('Se intenta crear buffer vacio')
-		self.samples = samples.copy()
+			raise Exception('No se puede crear un buffer vacio')
+
+		for x in samples:
+			if (x > 1 or x < -1):
+				raise Exception('Los elementos del buffer deben ser -1 <= x <= 1: %f' % x)
+
+		self.samples = numpy.array(samples, numpy.float)
 
 	def __eq__(self, other):
 		return numpy.array_equal(self.samples, other.samples)
@@ -63,8 +68,8 @@ class Sound():
 		self.samples = samples
 		return self
 
-	def play(self, times):
-		samples = numpy.array(self.copy().loop(times).get_samples() * AMPLITUDE_MULT, NUMPY_ENCODING)
+	def play(self, speed):
+		samples = numpy.array(self.get_samples() * AMPLITUDE_MULT, NUMPY_ENCODING)
 		channel = pygame.sndarray.make_sound(samples).play()
 		while channel.get_busy(): pass
 		return self
@@ -79,15 +84,21 @@ class Sound():
 		return self
 
 	def loop(self, count):
-		return self.resize(int(count) * len(self.samples))
+		if not(isinstance(count, int)):
+			raise Exception("[LOOP] Se esperaba un entero: %f" % count)
+		return self.resize(count * len(self.samples))
 
 	def resize(self, new_len):
+		if not(isinstance(new_len, int)):
+			raise Exception("[RESIZE] Se esperaba un entero: %f" % count)
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[i % len(self.samples)]
 		return Sound(new_samples)
 
 	def resample(self, new_len):
+		if not(isinstance(new_len, int)):
+			raise Exception("[RESAMPLE] Se esperaba un entero: %f" % count)
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[int(i * len(self) / new_len)]
@@ -107,6 +118,8 @@ class Sound():
 		))
 
 	def fill(self, count):
+		if not(isinstance(count, int)):
+			raise Exception("[FILL] Se esperaba un entero: %f" % count)
 		new_len = BEAT * count
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(len(self.samples)):
@@ -114,14 +127,15 @@ class Sound():
 		return Sound(new_samples)
 
 	def reduce(self, count=1):
-		new_len = int(count) * BEAT
+		if not(isinstance(count, int)):
+			raise Exception("[REDUCE] Se esperaba un entero: %f" % count)
+		new_len = count * BEAT
 		if (len(self) > new_len):
 			return self.resample(new_len)
 		else:
 			return self.copy()
 
 	def _oper(self, other, op):
-
 		if (len(self) < len(other)):
 			a = self.resize(len(other))
 			b = other
@@ -135,7 +149,9 @@ class Sound():
 		return Sound(new_samples)
 
 	def expand(self, count=1):
-		new_len = int(count) * BEAT
+		if not(isinstance(count, int)):
+			raise Exception("[EXPAND] Se esperaba un entero: %f" % count)
+		new_len = count * BEAT
 		if (len(self) < new_len):
 			return self.resample(new_len)
 		else:
@@ -164,17 +180,23 @@ class SoundGenerator():
 		return Sound(numpy.array(samples))
 
 	def sine(self, cicles, amp):
-		omega = (int(cicles) * numpy.pi * 2) / BEAT
-		xvalues = numpy.arange(int(BEAT)) * omega
+		if not(-1<= amp <=1):
+			raise Exception("[SINE] Amplitud incorrecta: %f" % amp)
+		omega = (cicles * numpy.pi * 2) / BEAT
+		xvalues = numpy.arange(BEAT) * omega
 		return Sound(amp * numpy.sin(xvalues))
 
 	def silence(self):
 		return Sound(numpy.zeros(BEAT))
 
 	def linear(self, start, end):
+		if not(-1<= start <=1 and -1<= end <=1):
+			raise Exception("[LINEAR]  Rango incorrecto: %f, %f" % (start, end))
 		return Sound(numpy.linspace(start, end, BEAT))
 
 	def noise(self, amp):
+		if not(-1<= amp <=1):
+			raise Exception("[NOISE] Amplitud incorrecta: %f" % amp)
 		return Sound(numpy.random.random(BEAT) * amp)
 
 	def note(self, note, amp, octave=1):
