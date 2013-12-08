@@ -334,14 +334,22 @@ class TestSoundCases(TestCase):
 		self.assertEqual([0, 0.1, 0.2], sound1.tolist())
 
 
-	def fix_test_resample(self):
-		sound1 = self.generator.from_list([0, 0.1, 0.2, 0,3])
+	def test_resample(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2, 0.3])
 
 		self.assertEqual(
 			self.generator.from_list([0, 0.1, 0.2, 0.3]),
 			sound1.resample(4))
 
 		self.assertEqual(1, len(sound1.resample(1)))
+		self.assertEqual(3, len(sound1.resample(3)))
+		self.assertEqual(6, len(sound1.resample(6)))
+		self.assertEqual(10, len(sound1.resample(10)))
+
+		self.assertRaises(Exception, lambda : sound1.expand(0))
+		self.assertRaises(Exception, lambda : sound1.expand(-1))
+		self.assertRaises(Exception, lambda : sound1.expand(0.5))
+		self.assertRaises(Exception, lambda : sound1.expand(1.5))
 		
 
 
