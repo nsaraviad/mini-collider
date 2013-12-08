@@ -5,6 +5,7 @@ import unittest
 
 class TestSoundGeneratorCases(TestCase):
 
+
 	def test_from_list(self):
 
 		sound = self.generator.from_list([1])
@@ -16,9 +17,15 @@ class TestSoundGeneratorCases(TestCase):
 		sound = self.generator.from_list([0, 0.1, -1])
 		self.assertEqual([0, 0.1, -1], sound.tolist())
 
+		self.assertRaises(Exception, lambda : self.generator.from_list([]))
+		self.assertRaises(Exception, lambda : self.generator.from_list([2]))
+		self.assertRaises(Exception, lambda : self.generator.from_list([-2]))
+
+
 	def test_silence(self):
 		sound = self.generator.silence()
 		self.assertEqual([0] * self.beat, sound.tolist())
+
 
 	def test_linear(self):
 		sound = self.generator.linear(0, 0)
@@ -49,6 +56,10 @@ class TestSoundGeneratorCases(TestCase):
 		self.assertTrue(numpy.array_equal(numpy.linspace(-1, 1, self.beat), sound.get_samples()))
 		self.assertEqual(self.beat, len(sound))
 
+		self.assertRaises(Exception, lambda : self.generator.linear(2, 0))
+		self.assertRaises(Exception, lambda : self.generator.linear(0, 2))
+
+
 	def test_noise(self):
 		sound = self.generator.noise(0)
 		self.assertEqual([0] * self.beat, sound.tolist())
@@ -68,6 +79,7 @@ class TestSoundGeneratorCases(TestCase):
 		self.assertEqual(len(numpy.unique(sound.get_samples())), len(sound))
 		self.assertEqual(self.beat, len(sound))
 
+
 	def test_sine(self):
 		sound = self.generator.sine(1, 0)
 		self.assertEqual([0] * self.beat, sound.tolist())
@@ -75,13 +87,20 @@ class TestSoundGeneratorCases(TestCase):
 		sound = self.generator.sine(1, 1)
 		self.assertEqual(self.beat, len(sound))
 		self.assertElementsInRange(sound, -1, 1)
-		sound.plot
 
 		sound = self.generator.sine(4, 0.5)
 		self.assertEqual(self.beat, len(sound))
 		self.assertElementsInRange(sound, -0.5, 0.5)
 
+		self.assertRaises(Exception, lambda : self.generator.sine(0, 1))
+		self.assertRaises(Exception, lambda : self.generator.sine(-1, 1))
+		self.assertRaises(Exception, lambda : self.generator.sine(0.5, 1))
+		self.assertRaises(Exception, lambda : self.generator.sine(1, -1))
+		self.assertRaises(Exception, lambda : self.generator.sine(0, 2))
+
+
 class TestSoundCases(TestCase):
+
 
 	def test_add(self):
 
@@ -103,6 +122,7 @@ class TestSoundCases(TestCase):
 		self.assertEqual([0.1, 0.4, 0.6, 0.5], sound3.tolist())		
 		sound4 = sound2 + sound1
 		self.assertEqual(sound3, sound4)
+
 
 	def test_sub(self):
 
@@ -130,6 +150,7 @@ class TestSoundCases(TestCase):
 		sound2 = self.generator.from_list([0, 0.5, 0.5, 0.6])
 		sound3 = sound2 - sound1
 		self.assertEqual([-0.1, 0.6, 0.4, 0.7], sound3.tolist())		
+
 
 	def test_mul(self):
 
@@ -170,6 +191,7 @@ class TestSoundCases(TestCase):
 		sound3 = sound2 / sound1
 		self.assertEqual([0, -0.4, 1], sound3.tolist())		
 
+
 	def test_mix(self):
 
 		sound1 = self.generator.from_list([0.5, 0.6, 0])
@@ -184,6 +206,7 @@ class TestSoundCases(TestCase):
 		sound4 = sound2 & sound1	
 		self.assertEqual(sound3, sound4)
 
+
 	def test_concat(self):
 		sound1 = self.generator.from_list([0.1])
 		sound2 = self.generator.from_list([0.2, 0.3])
@@ -192,4 +215,5 @@ class TestSoundCases(TestCase):
 
 if __name__ == '__main__':
 	unittest.main()
+
 
