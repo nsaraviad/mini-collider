@@ -1,9 +1,23 @@
 import minicollider.mixer as mixer
-from minicollider.test.testcase import TestCase
 import numpy
 import unittest
 
-class TestSoundGeneratorCases(TestCase):
+class MixerTestCase(unittest.TestCase):
+
+
+	def assertElementsInRange(self, list, min, max):
+		for item in list:
+			self.assertTrue(min <= item <= max)
+
+	def setUp(self):
+		self.sample_rate = 4800
+		self.beat = self.sample_rate / 12
+
+		mixer.init(self.sample_rate, self.beat, 0)
+		self.generator = mixer.SoundGenerator()
+
+
+class TestSoundGeneratorCases(MixerTestCase):
 
 
 	def test_from_list(self):
@@ -99,7 +113,7 @@ class TestSoundGeneratorCases(TestCase):
 		self.assertRaises(Exception, lambda : self.generator.sine(0, 2))
 
 
-class TestSoundCases(TestCase):
+class TestSoundCases(MixerTestCase):
 
 
 	def test_add(self):
@@ -351,7 +365,6 @@ class TestSoundCases(TestCase):
 		self.assertRaises(Exception, lambda : sound1.expand(0.5))
 		self.assertRaises(Exception, lambda : sound1.expand(1.5))
 		
-
 
 if __name__ == '__main__':
 	unittest.main()

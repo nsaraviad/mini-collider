@@ -21,7 +21,7 @@ def parse(input):
 		res = parser.parse(input)
 	except Exception, e:
 		raise SyntaxError("%s" % e)
-
+	return res
 
 precedence = (
 	('left', 'CON', 'MIX'),
