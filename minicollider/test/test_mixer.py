@@ -243,9 +243,6 @@ class TestSoundCases(MixerTestCase):
 
 		self.assertRaises(Exception, lambda : sound1.loop(0))
 		self.assertRaises(Exception, lambda : sound1.loop(-1))
-		self.assertRaises(Exception, lambda : sound1.loop(0.5))
-		self.assertRaises(Exception, lambda : sound1.loop(1.5))
-
 
 	def test_resize(self):
 		sound1 = self.generator.from_list([0, 0.1, 0.2])
@@ -313,9 +310,7 @@ class TestSoundCases(MixerTestCase):
 
 		self.assertRaises(Exception, lambda : sound1.fill(0))
 		self.assertRaises(Exception, lambda : sound1.fill(-1))
-		self.assertRaises(Exception, lambda : sound1.fill(0.5))
-		self.assertRaises(Exception, lambda : sound1.fill(1.5))
-
+		
 
 	def test_reduce(self):
 		sound1 = self.generator.from_list([0, 0.1] * (self.beat - 1))

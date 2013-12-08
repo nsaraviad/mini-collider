@@ -27,7 +27,6 @@ class ParserTestCase(unittest.TestCase):
 		self.assertEqual(sound, parser.parse(input))
 
 
-
 	def assertParseAllEqual(self, sound, input_list):
 		for input in input_list:
 			self.assertParseEqual(sound, input)
