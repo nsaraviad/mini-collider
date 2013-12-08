@@ -102,7 +102,7 @@ def p_BUFFER_metodo_1param_tune_pos(t):
 
 def p_BUFFER_metodo_1param_tune_neg(t):
 	'''BUFFER :	BUFFER TUNE LPAREN SUB NUM RPAREN'''
-	t[0] = t[1].tune(-t[4])
+	t[0] = t[1].tune(-t[5])
 
 
 def p_BUFFER_generador_0param(t):
@@ -136,19 +136,19 @@ def p_BUFFER_generator_2param_lin_pos_pos(t):
 def p_BUFFER_generator_2param_lin_neg_pos(t):
 	'BUFFER : LIN LPAREN SUB NUM COMA NUM RPAREN'
 
-	t[0] = generator.linear(-t[3], t[5])
+	t[0] = generator.linear(-t[4], t[6])
 
 
 def p_BUFFER_generator_2param_lin_pos_neg(t):
 	'BUFFER : LIN LPAREN NUM COMA SUB NUM RPAREN'
 
-	t[0] = generator.linear(t[3], -t[5])
+	t[0] = generator.linear(t[3], -t[6])
 
 
 def p_BUFFER_generator_2param_lin_neg_neg(t):
 	'BUFFER : LIN LPAREN SUB NUM COMA SUB NUM RPAREN'
 
-	t[0] = generator.linear(-t[3], -t[5])
+	t[0] = generator.linear(-t[4], -t[7])
 
 
 def p_BUFFER_llaves(t):
