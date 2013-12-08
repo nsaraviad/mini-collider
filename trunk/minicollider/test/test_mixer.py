@@ -213,7 +213,137 @@ class TestSoundCases(TestCase):
 
 		self.assertEqual([0.1, 0.2, 0.3], (sound1 // sound2).tolist())	
 
+
+	def test_loop(self):
+		sound1 = self.generator.from_list([1])
+		sound2 = self.generator.from_list([1, 1, 1])
+		self.assertEqual(sound2, sound1.loop(3))
+
+		sound1 = self.generator.from_list([1, 0.5])
+		sound2 = self.generator.from_list([1, 0.5, 1, 0.5, 1, 0.5])
+		self.assertEqual(sound2, sound1.loop(3))
+
+		self.assertRaises(Exception, lambda : sound1.loop(0))
+		self.assertRaises(Exception, lambda : sound1.loop(-1))
+		self.assertRaises(Exception, lambda : sound1.loop(0.5))
+		self.assertRaises(Exception, lambda : sound1.loop(1.5))
+
+
+	def test_resize(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2])
+
+		self.assertEqual(self.generator.from_list([0]), sound1.resize(1))
+		self.assertEqual(self.generator.from_list([0, 0.1]), sound1.resize(2))
+		self.assertEqual(self.generator.from_list([0, 0.1, 0.2]), sound1.resize(3))
+
+		self.assertEqual(
+			self.generator.from_list([0, 0.1, 0.2, 0.0]), 
+			sound1.resize(4))
+
+		self.assertEqual(
+			self.generator.from_list([0, 0.1, 0.2, 0.0, 0.1]), 
+			sound1.resize(5))
+
+		self.assertEqual(
+			self.generator.from_list([0, 0.1, 0.2, 0.0, 0.1, 0.2]), 
+			sound1.resize(6))
+
+		self.assertRaises(Exception, lambda : sound1.resize(0))
+		self.assertRaises(Exception, lambda : sound1.resize(-1))
+		self.assertRaises(Exception, lambda : sound1.resize(0.5))
+		self.assertRaises(Exception, lambda : sound1.resize(1.5))
+
+
+	def test_resample(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2])
+
+		self.assertRaises(Exception, lambda : sound1.resample(0))
+		self.assertRaises(Exception, lambda : sound1.resample(-1))
+		self.assertRaises(Exception, lambda : sound1.resample(0.5))
+		self.assertRaises(Exception, lambda : sound1.resample(1.5))
+
+
+	def test_copy(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2])
+		copy = sound1.copy()
+
+		self.assertEqual(sound1, copy)
+		self.assertFalse(sound1 is copy)
+
+
+	def test_concat(self):
+		sound1 = self.generator.from_list([0.1])
+		sound2 = self.generator.from_list([0.2])
+
+		self.assertEqual(self.generator.from_list([0.1, 0.2]), sound1.concat(sound2))
+
+
+	def test_fill(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2])
+
+		self.assertEqual(
+			self.generator.from_list([0, 0.1, 0.2] + [0] * (self.beat - 3)),
+			sound1.fill(1))
+		self.assertEqual(
+			self.generator.from_list([0, 0.1, 0.2] + [0] * (self.beat * 2- 3)),
+			sound1.fill(2))
+
+		sound2 = self.generator.from_list([0.1] * self.beat)
+		self.assertEqual(
+			sound2,
+			sound2.fill(1))
+
+		self.assertRaises(Exception, lambda : sound1.fill(0))
+		self.assertRaises(Exception, lambda : sound1.fill(-1))
+		self.assertRaises(Exception, lambda : sound1.fill(0.5))
+		self.assertRaises(Exception, lambda : sound1.fill(1.5))
+
+
+	def test_reduce(self):
+		sound1 = self.generator.from_list([0, 0.1] * (self.beat - 1))
+		self.assertEqual(self.beat, len(sound1.reduce(1)))
+
+		sound1 = self.generator.from_list([0.1] * (self.beat - 1))
+		self.assertEqual(len(sound1), len(sound1.reduce(1)))
+
+		sound1 = self.generator.from_list([0, 0.1] * (self.beat - 1))
+		self.assertEqual(len(sound1), len(sound1.reduce(2)))
+
+		self.assertRaises(Exception, lambda : sound1.reduce(0))
+		self.assertRaises(Exception, lambda : sound1.reduce(-1))
+		self.assertRaises(Exception, lambda : sound1.reduce(0.5))
+		self.assertRaises(Exception, lambda : sound1.reduce(1.5))
+
+
+	def test_expand(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2])
+		self.assertEqual(self.beat, len(sound1.expand(1)))
+		self.assertEqual(self.beat * 2, len(sound1.expand(2)))
+
+		sound1 = self.generator.from_list([0, 0.1] * self.beat)
+		self.assertEqual(len(sound1), len(sound1.expand(1)))
+
+		self.assertRaises(Exception, lambda : sound1.expand(0))
+		self.assertRaises(Exception, lambda : sound1.expand(-1))
+		self.assertRaises(Exception, lambda : sound1.expand(0.5))
+		self.assertRaises(Exception, lambda : sound1.expand(1.5))
+
+
+	def test_tolist(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2])
+		self.assertEqual([0, 0.1, 0.2], sound1.tolist())
+
+
+	def fix_test_resample(self):
+		sound1 = self.generator.from_list([0, 0.1, 0.2, 0,3])
+
+		self.assertEqual(
+			self.generator.from_list([0, 0.1, 0.2, 0.3]),
+			sound1.resample(4))
+
+		self.assertEqual(1, len(sound1.resample(1)))
+		
+
+
 if __name__ == '__main__':
 	unittest.main()
-
-

@@ -84,21 +84,21 @@ class Sound():
 		return self
 
 	def loop(self, count):
-		if not(isinstance(count, int)):
-			raise Exception("[LOOP] Se esperaba un entero: %s" % count)
+		if not(isinstance(count, int) and 0 < count):
+			raise Exception("[LOOP] Se esperaba un entero positivo: %s" % count)
 		return self.resize(count * len(self.samples))
 
 	def resize(self, new_len):
-		if not(isinstance(new_len, int)):
-			raise Exception("[RESIZE] Se esperaba un entero: %s" % count)
+		if not(isinstance(new_len, int) and 0 < new_len):
+			raise Exception("[RESIZE] Se esperaba un entero positivo: %s" % count)
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[i % len(self.samples)]
 		return Sound(new_samples)
 
 	def resample(self, new_len):
-		if not(isinstance(new_len, int)):
-			raise Exception("[RESAMPLE] Se esperaba un entero: %s" % count)
+		if not(isinstance(new_len, int) and 0 < new_len):
+			raise Exception("[RESAMPLE] Se esperaba un entero positivo: %s" % count)
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(new_len):
 			new_samples[i] = self.samples[int(i * len(self) / new_len)]
@@ -118,8 +118,8 @@ class Sound():
 		))
 
 	def fill(self, count):
-		if not(isinstance(count, int)):
-			raise Exception("[FILL] Se esperaba un entero: %s" % count)
+		if not(isinstance(count, int) and 0 < count):
+			raise Exception("[FILL] Se esperaba un entero positivo: %s" % count)
 		new_len = BEAT * count
 		new_samples = numpy.zeros(new_len)
 		for i in xrange(len(self.samples)):
@@ -127,8 +127,8 @@ class Sound():
 		return Sound(new_samples)
 
 	def reduce(self, count=1):
-		if not(isinstance(count, int)):
-			raise Exception("[REDUCE] Se esperaba un entero: %s" % count)
+		if not(isinstance(count, int) and 0 < count):
+			raise Exception("[REDUCE] Se esperaba un entero positivo: %s" % count)
 		new_len = count * BEAT
 		if (len(self) > new_len):
 			return self.resample(new_len)
@@ -149,8 +149,8 @@ class Sound():
 		return Sound(new_samples)
 
 	def expand(self, count=1):
-		if not(isinstance(count, int)):
-			raise Exception("[EXPAND] Se esperaba un entero: %s" % count)
+		if not(isinstance(count, int) and 0 < count):
+			raise Exception("[EXPAND] Se esperaba un entero positivo: %s" % count)
 		new_len = count * BEAT
 		if (len(self) < new_len):
 			return self.resample(new_len)
