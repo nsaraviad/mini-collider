@@ -29,8 +29,10 @@ def parsear_archivo(file):
     except IOError:
         print 'Error opening the file.'
         exit(1)
-    minicollider.parser.parse(entrada)
-
+    try:
+        minicollider.parser.parse(entrada)
+    except Exception, e:
+        print "Error: %s" % e
 
 def prompt():
     while 1:
