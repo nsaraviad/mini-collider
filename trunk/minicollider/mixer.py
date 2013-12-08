@@ -121,8 +121,11 @@ class Sound():
 		if not(isinstance(count, int) and 0 < count):
 			raise Exception("[FILL] Se esperaba un entero positivo: %s" % count)
 		new_len = BEAT * count
+		
+		if (len(self) >= new_len): return self.copy()
+
 		new_samples = numpy.zeros(new_len)
-		for i in xrange(len(self.samples)):
+		for i in xrange(len(self)):
 			new_samples[i] = self.samples[i]
 		return Sound(new_samples)
 
