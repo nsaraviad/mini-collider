@@ -40,7 +40,11 @@ def prompt():
             print
             break
         if entrada != '':
-            minicollider.parser.parse(entrada)
+        	try:
+        		minicollider.parser.parse(entrada)
+        	except Exception, e:
+        		print "Error: %s" % e
+            
 
 
 if __name__ == '__main__':
