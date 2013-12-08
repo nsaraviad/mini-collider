@@ -50,7 +50,7 @@ def t_NUM(t):
 	return t	
 	
 def t_error(t):
-	raise SyntaxError("Illegal character '%s'" % t.value[0])
+	raise SyntaxError("Caracter ilegal: '%s'" % t.value[0])
 	
 # Build the lexer
 lexer = lex.lex()
