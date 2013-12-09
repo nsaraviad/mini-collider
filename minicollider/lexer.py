@@ -3,7 +3,10 @@
 #
 # Lexer para el mini-collider
 # -----------------------------------------------------------------------------
-import ply.lex as lex
+try:
+	import ply.lex as lex
+except ImportError:
+	import external.lex as lex
 import re
 
 tokens = (
