@@ -7,7 +7,7 @@ import pygame
 NUMPY_ENCODING = numpy.int16
 MIXER_ENCODING = -16
 
-AMPLITUDE_MULT = 32000
+MAX_AMPLITUDE = 32000
 SAMPLE_RATE = 8800
 BEAT = SAMPLE_RATE / 12
 
@@ -28,10 +28,6 @@ class Sound():
 		"samples tiene que ser un array de numpy"
 		if (len(samples)) == 0:
 			raise Exception('No se puede crear un buffer vacio')
-
-		for x in samples:
-			if (x > 1 or x < -1):
-				raise Exception('Los elementos del buffer deben ser -1 <= x <= 1: %s' % x)
 
 		self.samples = numpy.array(samples, numpy.float)
 
@@ -70,7 +66,8 @@ class Sound():
 		return self
 
 	def play(self, speed):
-		samples = numpy.array(self.get_samples() * AMPLITUDE_MULT, NUMPY_ENCODING)
+		amp_mul = MAX_AMPLITUDE / numpy.amax(self.samples)
+		samples = numpy.array(self.get_samples() * amp_mul, NUMPY_ENCODING)
 		channel = pygame.sndarray.make_sound(samples).play()
 		while channel.get_busy(): pass
 		return self
@@ -85,8 +82,8 @@ class Sound():
 		return self
 
 	def loop(self, count):
-		if not (isinstance(count, (int, float)) and 0 < count):
-			raise Exception("[LOOP] Se esperaba un entero o flotante positivo: %s" % count)
+		if not(0 < count):
+			raise Exception("[LOOP] Se esperaba un numero positivo: %s" % count)
 		return self.resize(int(count * len(self.samples)))
 
 	def resize(self, new_len):
@@ -119,8 +116,8 @@ class Sound():
 		))
 
 	def fill(self, count):
-		if not (isinstance(count, (int, float)) and 0 < count):
-			raise Exception("[FILL] Se esperaba un entero o flotante positivo: %s" % count)
+		if not(0 < count):
+			raise Exception("[FILL] Se esperaba un numero positivo: %s" % count)
 		new_len = int(BEAT * count)
 		
 		if (len(self) >= new_len): return self.copy()
@@ -131,9 +128,9 @@ class Sound():
 		return Sound(new_samples)
 
 	def reduce(self, count=1):
-		if not(isinstance(count, int) and 0 < count):
-			raise Exception("[REDUCE] Se esperaba un entero positivo: %s" % count)
-		new_len = count * BEAT
+		if not(0 < count):
+			raise Exception("[REDUCE] Se esperaba un numero positivo: %s" % count)
+		new_len = int(count * BEAT)
 		if (len(self) > new_len):
 			return self.resample(new_len)
 		else:
@@ -153,9 +150,9 @@ class Sound():
 		return Sound(new_samples)
 
 	def expand(self, count=1):
-		if not(isinstance(count, int) and 0 < count):
-			raise Exception("[EXPAND] Se esperaba un entero positivo: %s" % count)
-		new_len = count * BEAT
+		if not(0 < count):
+			raise Exception("[EXPAND] Se esperaba un numero positivo: %s" % count)
+		new_len = int(count * BEAT)
 		if (len(self) < new_len):
 			return self.resample(new_len)
 		else:
