@@ -3,7 +3,10 @@
 #
 # Parser para el mini-collider
 # -----------------------------------------------------------------------------
-import ply.yacc as yacc
+try:
+	import ply.yacc as yacc
+except ImportError:
+	import external.yacc as yacc
 from lexer import tokens
 import mixer
 
@@ -25,7 +28,7 @@ def parse(input):
 
 precedence = (
 	('left', 'CON', 'MIX'),
-	('nonassoc', 'LOOP', 'POST', 'LOOP', 'TUNE', 'EXPA', 'REDU','FILL', 'PLAY', 'PLOT'),
+	('nonassoc', 'LOOP', 'POST', 'TUNE', 'EXPA', 'REDU','FILL', 'PLAY', 'PLOT'),
 	('left', 'ADD', 'SUB'),
 	('left', 'MUL', 'DIV'),
 )
