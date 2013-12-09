@@ -32,7 +32,9 @@ def parsear_archivo(file):
     try:
         minicollider.parser.parse(entrada)
     except Exception, e:
-        print "Error: %s" % e
+        if e: msg = str(e)
+        else: msg = 'Syntax Error'
+        print "Error: %s" % msg
 
 def prompt():
     while 1:
