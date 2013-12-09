@@ -275,7 +275,7 @@ class TestMethodsCases(ParserTestCase):
 		self.assertParseEqualList([1, 2, 3] + [0] * (self.beat * 2 - 3), '{1;2;3}.fill(2)')
 
 		self.assertParseEqualList([1 ] + [0] * (self.beat / 2 - 1), '1.fill(0.5)')
-		self.assertParseEqualList([1, 2, 3] * 1000, '{1;2;3}.loop(1000).fill')
+		self.assertParseEqualList([1, 2] * (self.beat / 2), '{1;2}.loop(1000).fill')
 
 		self.assertParseFail('1.fill(0)')
 		self.assertParseFail('1.fill(-1)')
