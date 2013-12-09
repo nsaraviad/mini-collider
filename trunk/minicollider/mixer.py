@@ -64,9 +64,16 @@ class Sound():
 		self.samples = samples
 		return self
 
-	def play(self, speed):
-		amp_mul = MAX_AMPLITUDE / numpy.amax(self.samples)
-		samples = numpy.array(self.get_samples() * amp_mul, NUMPY_ENCODING)
+	def play(self, speed=1):
+		if not(0 < speed):
+			raise Exception("[PLAY] Se esperaba un numero positivo: %s" % speed)
+		if speed != 1:
+			target = self.resample(int((1.0 / speed) * len(self)))
+		else:
+			target = self
+
+		amp_mul = MAX_AMPLITUDE / numpy.amax(target.samples)
+		samples = numpy.array(target.get_samples() * amp_mul, NUMPY_ENCODING)
 		channel = pygame.sndarray.make_sound(samples).play()
 		while channel.get_busy(): pass
 		return self
