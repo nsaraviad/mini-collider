@@ -1,0 +1,43 @@
+// Percution Base //
+{
+    {
+        { { sin(4); sin(4); sin(2); sin(1) }.reduce * lin( 1.0, 0.0) }.fill(12)
+    } mix {
+        { { { sin( 16, 0.9)+noise(0.1) }*lin( 1.0, 0.1) }.fill(6) }.loop(2)
+    } mix {
+        { { noise*linear( 1.0, 0.25); { noise.loop(7) }*linear( 0.25, 0.0) }.reduce.fill(3) }.loop(4)
+    } ; 
+
+	{
+        { { sin(4); sin(4); sin(2); sin(1) }.reduce * lin( 1.0, 0.0) }.fill(12)
+    } mix {
+        { { { sin( 16, 0.9)+noise(0.1) }*lin( 1.0, 0.1) }.fill(6) }.loop(2)
+    } mix {
+        { { noise*linear( 1.0, 0.25); { noise.loop(7) }*linear( 0.25, 0.0) }.reduce.fill(3) }.loop(4)
+    }; 
+
+	{
+        { { sin(4); sin(4); sin(2); sin(1) }.reduce * lin( 1.0, 0.0) }.fill(12)
+    } mix {
+        { { { sin( 16, 0.9)+noise(0.1) }*lin( 1.0, 0.1) }.fill(6) }.loop(2)
+    } mix {
+        { { noise*linear( 1.0, 0.25); { noise.loop(7) }*linear( 0.25, 0.0) }.reduce.fill(3) }.loop(4)
+    }; 
+
+	{
+        { { sin(4); sin(4); sin(2); sin(1) }.reduce * lin( 1.0, 0.0) }.fill(12)
+    } mix {
+        { { { sin( 16, 0.9)+noise(0.1) }*lin( 1.0, 0.1) }.fill(6) }.loop(2)
+    } mix {
+        { { noise*linear( 1.0, 0.25); { noise.loop(7) }*linear( 0.25, 0.0) }.reduce.fill(3) }.loop(4)
+    }; 
+
+	{
+        { { sin(4); sin(4); sin(2); sin(1) }.reduce * lin( 1.0, 0.0) }.fill(12)
+    } mix {
+        { { { sin( 16, 0.9)+noise(0.1) }*lin( 1.0, 0.1) }.fill(6) }.loop(2)
+    } mix {
+        { { noise*linear( 1.0, 0.25); { noise.loop(7) }*linear( 0.25, 0.0) }.reduce.fill(3) }.loop(4)
+    }
+}.loop(8).play
+

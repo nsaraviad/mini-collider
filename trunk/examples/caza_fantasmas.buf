@@ -1,0 +1,16 @@
+{
+{-1;1}.loop(11).expand.tune(11).loop(4);
+{-1;1}.loop(11).expand.tune(11).loop(4);
+{-1;1}.loop(11).expand.tune(15).loop(4);
+{-1;1}.loop(11).expand.tune(11).loop(4);
+silence.loop(4);
+{-1;1}.loop(11).expand.tune(13).loop(4);
+{-1;1}.loop(11).expand.tune(9).loop(4);
+silence.loop(4);
+{-1;1}.loop(11).expand.tune(11).loop(4);
+{-1;1}.loop(11).expand.tune(11).loop(4);
+{-1;1}.loop(11).expand.tune(11).loop(4);
+{-1;1}.loop(11).expand.tune(11).loop(4);
+{-1;1}.loop(11).expand.tune(9).loop(4);
+{-1;1}.loop(11).expand.tune(11).loop(4)
+}.play
