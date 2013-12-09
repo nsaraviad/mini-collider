@@ -242,14 +242,14 @@ class TestCustomCases(ParserTestCase):
 
 	def test_enunciado(self):
 		
-		self.assertParseEqualList([2], '1; 2.post')
-		self.assertParseEqualList([1, 2], '{1; 2}.post')
-		self.assertParseEqualList([7], '{1 + 2*3}.post')
-		self.assertParseEqualList([6, 3, 6], '{{2;1} mul {3;3;3}}.post')
-		self.assertParseEqualList([0, 1], '{1-1;2-1}.post')
-		self.assertParseEqualList([2, 3, 4], '{4+1*-2 & {2;4;6}}.post')
-		self.assertParseEqualList([0, 1, 1], '{0;1.loop(2)}.post')
-		self.assertParseEqualList([0, 1], '{0;1;2;3}.loop(0.5).post')
+		self.assertParseEqualList([1, 2], '1; 2')
+		self.assertParseEqualList([1, 2], '{1; 2}')
+		self.assertParseEqualList([7], '{1 + 2*3}')
+		self.assertParseEqualList([6, 3, 6], '{{2;1} mul {3;3;3}}')
+		self.assertParseEqualList([0, 1], '{1-1;2-1}')
+		self.assertParseEqualList([2, 3, 4], '{4+1*-2 & {2;4;6}}')
+		self.assertParseEqualList([0, 1, 1], '{0;1.loop(2)}')
+		self.assertParseEqualList([0, 1], '{0;1;2;3}.loop(0.5)')
 if __name__ == '__main__':
 	unittest.main()
 
