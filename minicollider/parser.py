@@ -25,7 +25,7 @@ def parse(input):
 
 precedence = (
 	('left', 'CON', 'MIX'),
-	('left', 'LOOP', 'POST'),
+	('nonassoc', 'LOOP', 'POST', 'LOOP', 'TUNE', 'EXPA', 'REDU','FILL', 'PLAY', 'PLOT'),
 	('left', 'ADD', 'SUB'),
 	('left', 'MUL', 'DIV'),
 )
