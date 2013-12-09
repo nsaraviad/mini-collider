@@ -25,14 +25,10 @@ def init(sample_rate=8800, beat=8800/12, init_pygame=1):
 
 class Sound():
 	def __init__(self, samples):
-		"samples tiene que ser un array de numpy"
 		if (len(samples)) == 0:
 			raise Exception('No se puede crear un buffer vacio')
 
-		for x in samples:
-			#if (x > 1 or x < -1):
-			#	raise Exception('Los elementos del buffer deben ser -1 <= x <= 1: %s' % x)
-			self.samples = numpy.array(samples, numpy.float)
+		self.samples = numpy.array(samples, numpy.float)
 
 	def __eq__(self, other):
 		return numpy.array_equal(self.samples, other.samples)
@@ -85,9 +81,9 @@ class Sound():
 		return self
 
 	def loop(self, count):
-		#if not(isinstance(count, int) and 0 < count):
-		#	raise Exception("[LOOP] Se esperaba un entero positivo: %s" % count)
-		return self.resize(count * len(self.samples))
+		if not(0 < count):
+			raise Exception("[LOOP] Se esperaba un numero positivo: %s" % count)
+		return self.resize(int(count * len(self.samples)))
 
 	def resize(self, new_len):
 		if not(isinstance(new_len, int) and 0 < new_len):
