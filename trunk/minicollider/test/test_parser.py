@@ -148,10 +148,9 @@ class TestGeneratorsCases(ParserTestCase):
 		self.assertParseAllFail(['noi(2)', 'noi(-2)'])
 
 
-
-
-
-
+class TestCustomCases(ParserTestCase):
+	def test_loop(self):
+		pass
 
 if __name__ == '__main__':
 	unittest.main()

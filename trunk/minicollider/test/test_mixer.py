@@ -32,8 +32,6 @@ class TestSoundGeneratorCases(MixerTestCase):
 		self.assertEqual([0, 0.1, -1], sound.tolist())
 
 		self.assertRaises(Exception, lambda : self.generator.from_list([]))
-		self.assertRaises(Exception, lambda : self.generator.from_list([2]))
-		self.assertRaises(Exception, lambda : self.generator.from_list([-2]))
 
 
 	def test_silence(self):
@@ -310,7 +308,7 @@ class TestSoundCases(MixerTestCase):
 
 		self.assertRaises(Exception, lambda : sound1.fill(0))
 		self.assertRaises(Exception, lambda : sound1.fill(-1))
-		
+
 
 	def test_reduce(self):
 		sound1 = self.generator.from_list([0, 0.1] * (self.beat - 1))
@@ -324,8 +322,6 @@ class TestSoundCases(MixerTestCase):
 
 		self.assertRaises(Exception, lambda : sound1.reduce(0))
 		self.assertRaises(Exception, lambda : sound1.reduce(-1))
-		self.assertRaises(Exception, lambda : sound1.reduce(0.5))
-		self.assertRaises(Exception, lambda : sound1.reduce(1.5))
 
 
 	def test_expand(self):
@@ -338,8 +334,6 @@ class TestSoundCases(MixerTestCase):
 
 		self.assertRaises(Exception, lambda : sound1.expand(0))
 		self.assertRaises(Exception, lambda : sound1.expand(-1))
-		self.assertRaises(Exception, lambda : sound1.expand(0.5))
-		self.assertRaises(Exception, lambda : sound1.expand(1.5))
 
 
 	def test_tolist(self):
@@ -359,11 +353,16 @@ class TestSoundCases(MixerTestCase):
 		self.assertEqual(6, len(sound1.resample(6)))
 		self.assertEqual(10, len(sound1.resample(10)))
 
-		self.assertRaises(Exception, lambda : sound1.expand(0))
-		self.assertRaises(Exception, lambda : sound1.expand(-1))
-		self.assertRaises(Exception, lambda : sound1.expand(0.5))
-		self.assertRaises(Exception, lambda : sound1.expand(1.5))
+		self.assertRaises(Exception, lambda : sound1.resample(0))
+		self.assertRaises(Exception, lambda : sound1.resample(-1))
+		self.assertRaises(Exception, lambda : sound1.resample(0.5))
+		self.assertRaises(Exception, lambda : sound1.resample(1.5))
 		
+class TestCustomCases(MixerTestCase):
+
+	def test_loop(self):
+		sound = self.generator.from_list([-1,1]).loop(1000).expand().loop(6) // self.generator.from_list([-1,1]).loop(1000).expand().loop(6) // self.generator.from_list([-1,1]).loop(1000).expand().loop(6)
+
 
 if __name__ == '__main__':
 	unittest.main()
