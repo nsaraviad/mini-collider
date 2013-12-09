@@ -359,10 +359,7 @@ class TestSoundCases(MixerTestCase):
 		self.assertRaises(Exception, lambda : sound1.resample(1.5))
 		
 class TestCustomCases(MixerTestCase):
-
-	def test_loop(self):
-		sound = self.generator.from_list([-1,1]).loop(1000).expand().loop(6) // self.generator.from_list([-1,1]).loop(1000).expand().loop(6) // self.generator.from_list([-1,1]).loop(1000).expand().loop(6)
-
+	pass
 
 if __name__ == '__main__':
 	unittest.main()

@@ -13,6 +13,10 @@ class ParserTestCase(unittest.TestCase):
 		self.generator = parser.generator
 
 
+	def assertParseEqualList(self, list, input):
+		self.assertParseEqual(self.generator.from_list(list), input)
+
+
 	def assertParseFail(self, input):
 		self.assertRaises(Exception, lambda : parser.parse(input), 
 			'Se esperaba un error para el input: %s' % input)
@@ -24,7 +28,8 @@ class ParserTestCase(unittest.TestCase):
 
 
 	def assertParseEqual(self, sound, input):
-		self.assertEqual(sound, parser.parse(input))
+		parsed_sound = parser.parse(input)
+		self.assertEqual(sound, parsed_sound, '%s != %s' % (sound, parsed_sound))
 
 
 	def assertParseAllEqual(self, sound, input_list):
@@ -147,9 +152,92 @@ class TestGeneratorsCases(ParserTestCase):
 
 		self.assertParseAllFail(['noi(2)', 'noi(-2)'])
 
+class TestOperatorCases(ParserTestCase):
+
+
+	def test_add(self):
+
+		self.assertParseEqualList([3], '1 + 2')
+		self.assertParseEqualList([6], '1 + 2 + 3')
+		self.assertParseEqualList([-1], '1 + 2 + -4')
+		self.assertParseEqualList([2, 5, -1], '{1; 2; 3} + {1; 3; -4}')
+		self.assertParseEqualList([2, 5, -1], '{1; 4; -2} + {1}')
+		self.assertParseEqualList([2, 5, -1], '{1; 4; -2} + 1')
+		self.assertParseEqualList([2, 5, -1, 0], '{1; 3; -2; -2} + {1; 2}')
+		self.assertParseEqualList([2, 5, -1, 0], '{1; 2} + {1; 3; -2; -2}')
+
+
+	def test_sub(self):
+
+		self.assertParseEqualList([-1], '1 - 2')
+		self.assertParseEqualList([-4], '1 - 2 - 3')
+		self.assertParseEqualList([3], '1 - 2 - -4')
+		self.assertParseEqualList([0, -1, 7], '{1; 2; 3} - {1; 3; -4}')
+		self.assertParseEqualList([0, 3, -3], '{1; 4; -2} - {1}')
+		self.assertParseEqualList([0, 3, -3], '{1; 4; -2} - 1')
+		self.assertParseEqualList([0, 1, -3, -4], '{1; 3; -2; -2} - {1; 2}')
+		self.assertParseEqualList([0, -1, 3, 4], '{1; 2} - {1; 3; -2; -2}')
+
+
+	def test_mul(self):
+
+		self.assertParseEqualList([2], '1 * 2')
+		self.assertParseEqualList([6], '1 * 2 * 3')
+		self.assertParseEqualList([-8], '1 * 2 * -4')
+		self.assertParseEqualList([1, 6, -12], '{1; 2; 3} * {1; 3; -4}')
+		self.assertParseEqualList([2, 8, -4], '{1; 4; -2} * {2}')
+		self.assertParseEqualList([2, 8, -4], '{1; 4; -2} * 2')
+		self.assertParseEqualList([1, 6, -2, -4], '{1; 3; -2; -2} * {1; 2}')
+		self.assertParseEqualList([1, 6, -2, -4], '{1; 2} * {1; 3; -2; -2}')
+
+
+	def test_div(self):
+
+		self.assertParseEqualList([5], '10 / 2')
+		self.assertParseEqualList([2], '12 / 2 / 3')
+		self.assertParseEqualList([-2], '16 / 2 / -4')
+		self.assertParseEqualList([3, 0.5, -0.25], '{3; 2; 1} / {1; 4; -4}')
+		self.assertParseEqualList([5, 2, -0.5], '{10; 4; -1} / {2}')
+		self.assertParseEqualList([5, 2, -0.5], '{10; 4; -1} / 2')
+		self.assertParseEqualList([1, 1.5, -2, -1], '{1; 3; -2; -2} / {1; 2}')
+		self.assertParseEqualList([1, 1, -0.5, -1.5], '{1; 3} / {1; 3; -2; -2}')
+
+
+	def test_div(self):
+
+		self.assertParseEqualList([5], '10 / 2')
+		self.assertParseEqualList([2], '12 / 2 / 3')
+		self.assertParseEqualList([-2], '16 / 2 / -4')
+		self.assertParseEqualList([3, 0.5, -0.25], '{3; 2; 1} / {1; 4; -4}')
+		self.assertParseEqualList([5, 2, -0.5], '{10; 4; -1} / {2}')
+		self.assertParseEqualList([5, 2, -0.5], '{10; 4; -1} / 2')
+		self.assertParseEqualList([1, 1.5, -2, -1], '{1; 3; -2; -2} / {1; 2}')
+		self.assertParseEqualList([1, 1, -0.5, -1.5], '{1; 3} / {1; 3; -2; -2}')
+
+
+	def test_mix(self):
+
+		self.assertParseEqualList([6], '10 & 2')
+		self.assertParseEqualList([5], '12 & 2 & 3')
+		self.assertParseEqualList([2.5], '16 & 2 & -4')
+		self.assertParseEqualList([2, 3, -1.5], '{3; 2; 1} & {1; 4; -4}')
+		self.assertParseEqualList([6, 3, 0.5], '{10; 4; -1} & {2}')
+		self.assertParseEqualList([6, 3, 0.5], '{10; 4; -1} & 2')
+		self.assertParseEqualList([1, 2.5, -0.5, 0], '{1; 3; -2; -2} & {1; 2}')
+		self.assertParseEqualList([1, 2.5, -0.5, 0], '{1; 2} & {1; 3; -2; -2}')
+
+	def test_concat(self):
+
+		self.assertParseEqualList([10, 2], '10 ; 2')
+		self.assertParseEqualList([10, 2, -3], '10 ; 2 ; -3')
+
+		self.assertParseEqualList([10, 2], '{10} ; {2}')
+		self.assertParseEqualList([10, 1, 2], '{10; 1} ; {2}')
+		self.assertParseEqualList([10, 2, 1], '{10} ; {2; 1}')
+		self.assertParseEqualList([1, 2, 3, 4, 5, 6], '{1; 2} ; {3; 4} ; {5; 6}')
+
 
 class TestCustomCases(ParserTestCase):
-	def test_loop(self):
 		pass
 
 if __name__ == '__main__':

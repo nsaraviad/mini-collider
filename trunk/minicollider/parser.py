@@ -171,6 +171,6 @@ def p_expression_number(t):
 
 
 def p_error(t):
-	raise SyntaxError
+	raise SyntaxError("Syntax error in input!")
 
 parser = yacc.yacc()
